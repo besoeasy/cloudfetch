@@ -134,4 +134,4 @@ function levenshteinDistance(a, b) {
 	return matrix[b.length][a.length];
 }
 
-module.exports = { suggestRelatedCommands, levenshteinDistance, bytesToSize, str2hex, hex2str, getFiles, deleteFileIfExists, deleteEmptyFolders, generateRandString };
+module.exports = { suggestRelatedCommands, levenshteinDistance, bytesToSize, str2hex, hex2str, getFiles, deleteFileIfExists, deleteEmptyFolders, generateRandString, fs };

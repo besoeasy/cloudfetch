@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = require('./modules/aria2.js');
 
-const { deleteFileIfExists, getFiles, str2hex, hex2str, bytesToSize, deleteEmptyFolders, suggestRelatedCommands } = require('./modules/utils.js');
+const { deleteFileIfExists, getFiles, str2hex, hex2str, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs } = require('./modules/utils.js');
 
 const { getIpAddress, getSys, saveDirectory, port } = require('./modules/os.js');
 
@@ -19,8 +19,6 @@ const { spawn } = require('child_process');
 const { Telegraf } = require('telegraf');
 
 const bot = new Telegraf(process.env.TELEGRAMBOT);
-
-let needUpdate = false;
 
 bot.on('message', async (ctx) => {
 	try {
@@ -35,10 +33,6 @@ bot.on('message', async (ctx) => {
 
 			if (command === '/start') {
 				ctx.reply(`Your user id is: ${chat.id}, Ver : ${version}`);
-
-				if (needUpdate) {
-					ctx.reply(`You are on lower version please update to latest version to get new features and bug fixes.`);
-				}
 			} else if (command === '/help') {
 				ctx.reply(`
 				/content: This command will show you the content data URL. Use it to access your downloaded files directly.
@@ -86,7 +80,7 @@ bot.on('message', async (ctx) => {
 					var sendFile = file.substring(1);
 					var hash = str2hex(sendFile);
 
-					ctx.reply(`${sendFile} \n\n/delete_${hash}`);
+					ctx.reply(`${sendFile} \n\n/delete_${hash}\n\n/fetch_${hash}`);
 				}
 			} else if (command === '/download') {
 				if (args.length > 0) {
@@ -113,6 +107,18 @@ bot.on('message', async (ctx) => {
 				var ddta = await cancelDownload(downloadId);
 
 				ctx.reply(`Download canceled with id: ${downloadId}`);
+			} else if (command.startsWith('/fetch_')) {
+				var hash = command.split('_')[1];
+
+				var file = hex2str(hash);
+
+				var file_path = saveDirectory + chat.id + '/' + file;
+
+				ctx.reply(`Fetching ${file} ...`);
+
+				if (fs.existsSync(file_path)) {
+					ctx.replyWithDocument({ source: file_path });
+				}
 			} else if (command.startsWith('/delete_')) {
 				var hash = command.split('_')[1];
 
@@ -143,7 +149,7 @@ try {
 	if (!process.env.TELEGRAMBOT) {
 		console.log('Telegram bot token not set ! \nSet TELEGRAMBOT environment variable to your telegram bot token. \n\n');
 	} else {
-		needUpdate = getUpdateVer();
+		getUpdateVer();
 
 		deleteEmptyFolders(saveDirectory);
 
