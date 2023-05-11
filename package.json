@@ -1,0 +1,29 @@
+{
+  "name": "cloudfetch",
+  "version": "1.0.0",
+  "description": "cloud fetch",
+  "main": "index.js",
+  "bin": {
+    "cloudfetch": "./index.js"
+  },
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/besoeasy/cloudfetch.git"
+  },
+  "keywords": [
+    "cloud",
+    "downloader",
+    "aria2",
+    "torrent",
+    "download"
+  ],
+  "author": "besoeasy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/besoeasy/cloudfetch/issues"
+  },
+  "homepage": "https://github.com/besoeasy/cloudfetch#readme"
+}
