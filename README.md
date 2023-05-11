@@ -1,8 +1,8 @@
-[NPMJS]: https://www.npmjs.com/package/cloudfetch "cloudfetch on NPMJS"
+[NPMJS]: https://www.npmjs.com/package/cloudfetch 'cloudfetch on NPMJS'
 
-# cloudfetch
+# CloudFetch
+
 cloud fetch is a useful tool for anyone who wants to store, access, and stream their digital content from the cloud.
-
 
 ## Auto Install - Linux Only
 

@@ -18,11 +18,11 @@ const { spawn } = require('child_process');
 
 const { Telegraf } = require('telegraf');
 
-const BOT = new Telegraf(process.env.TELEGRAMBOT);
+const bot = new Telegraf(process.env.TELEGRAMBOT);
 
 let needUpdate = false;
 
-BOT.on('message', async (ctx) => {
+bot.on('message', async (ctx) => {
 	try {
 		const { message_id, from, chat, date, text } = ctx.message;
 
@@ -51,11 +51,12 @@ BOT.on('message', async (ctx) => {
 
 				/help: This command will show you the help menu.
 								
+				https://github.com/besoeasy/cloudfetch
 				`);
 			} else if (command === '/content') {
 				var ipAddress = await getIpAddress();
 
-				ctx.reply(`HTTP : http://${ipAddress}:${port} \n\n\nFTP : ftp://${ipAddress}:${port + 1}\n User : root\n Password : ${rootpassword}`);
+				ctx.reply(`HTTP : http://${ipAddress}:${port} \n\n\nFTP : ftp://${ipAddress}:${port + 1}\n\nUser : root\nPassword : ${rootpassword}`);
 			} else if (command === '/tunnel') {
 				ctx.reply(`You can also start the web tunnel with the following command:\n\nssh -R 80:localhost:${port} -R 80:localhost:${port + 1} serveo.net\n\nOR\n\nngrok http ${port}`);
 			} else if (command === '/stats') {
@@ -140,9 +141,7 @@ BOT.on('message', async (ctx) => {
 
 try {
 	if (!process.env.TELEGRAMBOT) {
-		console.log('Telegram bot token not set ! \n');
-
-		console.log('Set TELEGRAMBOT environment variable to your telegram bot token. \n\n');
+		console.log('Telegram bot token not set ! \nSet TELEGRAMBOT environment variable to your telegram bot token. \n\n');
 	} else {
 		needUpdate = getUpdateVer();
 
@@ -164,14 +163,10 @@ try {
 		]);
 
 		aria2c.on('error', async (err) => {
-			console.log('\n');
-
-			console.log('Please install aria2c and try again.');
-
-			console.log('\n');
+			console.log('\n\nPlease install aria2c and try again.\n\naria2c website: https://aria2.github.io/ \n\n');
 		});
 
-		BOT.launch();
+		bot.launch();
 
 		httpServer.listen(port);
 
