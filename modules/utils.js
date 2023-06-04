@@ -96,7 +96,7 @@ function deleteEmptyFolders(dir) {
 }
 
 function suggestRelatedCommands(inputCommand) {
-	const commands = ['/start', '/help', '/content', '/stats', '/files', '/download', '/tunnel', '/status_', '/cancel_', '/delete_'];
+	const commands = ['/start', '/help', '/content', '/stats', '/files', '/download', '/status_', '/cancel_', '/delete_'];
 	const maxEditDistance = 3;
 	const suggestions = [];
 

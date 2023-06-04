@@ -12,7 +12,7 @@ const { getIpAddress, getSys, saveDirectory, port } = require('./modules/os.js')
 
 const { httpServer, ftpServer, rootpassword } = require('./modules/serve.js');
 
-const { getUpdateVer, version } = require('./modules/updater.js');
+const { version } = require('./package.json');
 
 const { spawn } = require('child_process');
 
@@ -51,8 +51,6 @@ bot.on('message', async (ctx) => {
 				var ipAddress = await getIpAddress();
 
 				ctx.reply(`HTTP : http://${ipAddress}:${port} \n\n\nFTP : ftp://${ipAddress}:${port + 1}\n\nUser : root\nPassword : ${rootpassword}`);
-			} else if (command === '/tunnel') {
-				ctx.reply(`You can also start the web tunnel with the following command:\n\nssh -R 80:localhost:${port} -R 80:localhost:${port + 1} serveo.net\n\nOR\n\nngrok http ${port}`);
 			} else if (command === '/stats') {
 				const ddta = await getGlobalStats();
 				const stats = ddta.result;
@@ -149,8 +147,6 @@ try {
 	if (!process.env.TELEGRAMBOT) {
 		console.log('Telegram bot token not set ! \nSet TELEGRAMBOT environment variable to your telegram bot token. \n\n');
 	} else {
-		getUpdateVer();
-
 		deleteEmptyFolders(saveDirectory);
 
 		const aria2c = spawn('aria2c', [
