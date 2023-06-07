@@ -1,7 +1,7 @@
 {
   "name": "cloudfetch",
   "version": "1.0.1",
-  "description": "Telegram bot for file management. Download files via URLs, track progress, cancel downloads. Get server stats, explore files, delete unwanted ones, and generate direct content URLs.",
+  "description": "A versatile Telegram bot: download files from URLs, monitor progress, cancel downloads, access server stats, explore and delete files, and generate direct content URLs.",
   "unpkg": "install.sh",
   "bin": {
     "cloudfetch": "./index.js"

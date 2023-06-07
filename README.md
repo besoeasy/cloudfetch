@@ -2,7 +2,7 @@
 
 # Cloud Fetch
 
-CloudFetch is a feature-rich Telegram bot designed to simplify file management and downloading tasks. With an intuitive interface, users can initiate downloads by providing URLs, track download progress, and cancel downloads if needed. The bot provides comprehensive server statistics, including memory usage and download/upload speeds. Users can explore their downloaded files, delete unwanted files, and generate direct content URLs for easy access.
+A versatile Telegram bot: download files from URLs, monitor progress, cancel downloads, access server stats, explore and delete files, and generate direct content URLs.
 
 ## Auto Install - Linux Only
 
