@@ -2,19 +2,6 @@ const fs = require('fs');
 
 const path = require('path');
 
-function generateRandString() {
-	const minLength = 4;
-	const maxLength = 10;
-	const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	const passwordLength = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-	let password = '';
-	for (let i = 0; i < passwordLength; i++) {
-		const randomIndex = Math.floor(Math.random() * charset.length);
-		password += charset[randomIndex];
-	}
-	return password;
-}
-
 replaceStringInArray = (array, stringToFind, stringToReplace) => {
 	const newArray = array.map((item) => {
 		if (item.includes(stringToFind)) {
@@ -96,7 +83,7 @@ function deleteEmptyFolders(dir) {
 }
 
 function suggestRelatedCommands(inputCommand) {
-	const commands = ['/start', '/help', '/content', '/stats', '/files', '/download', '/status_', '/cancel_', '/delete_'];
+	const commands = ['/start', '/help', '/content', '/stats', '/files', '/download', '/status_', '/cancel_', '/delete_', '/fetch_'];
 	const maxEditDistance = 3;
 	const suggestions = [];
 
@@ -134,4 +121,4 @@ function levenshteinDistance(a, b) {
 	return matrix[b.length][a.length];
 }
 
-module.exports = { suggestRelatedCommands, levenshteinDistance, bytesToSize, str2hex, hex2str, getFiles, deleteFileIfExists, deleteEmptyFolders, generateRandString, fs };
+module.exports = { suggestRelatedCommands, levenshteinDistance, bytesToSize, str2hex, hex2str, getFiles, deleteFileIfExists, deleteEmptyFolders, fs };

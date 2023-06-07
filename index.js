@@ -8,17 +8,17 @@ const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = requ
 
 const { deleteFileIfExists, getFiles, str2hex, hex2str, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs } = require('./modules/utils.js');
 
-const { getIpAddress, getSys, saveDirectory, port } = require('./modules/os.js');
-
-const { httpServer, ftpServer, rootpassword } = require('./modules/serve.js');
-
-const { version } = require('./package.json');
+const { getIpAddress, getSys, saveDirectory, httpServer } = require('./modules/os.js');
 
 const { spawn } = require('child_process');
 
 const { Telegraf } = require('telegraf');
 
+const { version } = require('./package.json');
+
 const bot = new Telegraf(process.env.TELEGRAMBOT);
+
+const port = process.env.PORT || Math.floor(Math.random() * (2890 - 2280 + 1)) + 2280;
 
 bot.on('message', async (ctx) => {
 	try {
@@ -34,23 +34,11 @@ bot.on('message', async (ctx) => {
 			if (command === '/start') {
 				ctx.reply(`Your user id is: ${chat.id}, Ver : ${version}`);
 			} else if (command === '/help') {
-				ctx.reply(`
-				/content: This command will show you the content data URL. Use it to access your downloaded files directly.
-
-				/download: This command will start a download. Use it like this: /download https://example.com/file.zip
-
-				/stats: This command will show you the server statistics.
-
-				/files: This command will show you the downloaded files.
-
-				/help: This command will show you the help menu.
-								
-				https://github.com/besoeasy/cloudfetch
-				`);
+				ctx.reply(`https://github.com/besoeasy/cloudfetch`);
 			} else if (command === '/content') {
 				var ipAddress = await getIpAddress();
 
-				ctx.reply(`HTTP : http://${ipAddress}:${port} \n\n\nFTP : ftp://${ipAddress}:${port + 1}\n\nUser : root\nPassword : ${rootpassword}`);
+				ctx.reply(`HTTP : http://${ipAddress}:${port}`);
 			} else if (command === '/stats') {
 				const ddta = await getGlobalStats();
 				const stats = ddta.result;
@@ -171,19 +159,6 @@ try {
 		bot.launch();
 
 		httpServer.listen(port);
-
-		ftpServer.listen();
-
-		console.log('\n');
-
-		console.table({
-			'Version': version,
-			'aria2c PID': aria2c.pid,
-			'HTTP Port': `http://localhost:${port}`,
-			'FTP port': `ftp://localhost:${port + 1}`,
-		});
-
-		console.log('\n');
 	}
 } catch (error) {
 	console.log(error);

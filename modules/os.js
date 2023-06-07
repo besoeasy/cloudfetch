@@ -1,4 +1,5 @@
 const os = require('os');
+
 const ifaces = os.networkInterfaces();
 
 async function getIpAddress() {
@@ -42,8 +43,15 @@ async function getSys() {
 
 const saveDirectory = process.cwd() + '/downloads/';
 
-const host = '0.0.0.0';
+const handler = require('serve-handler');
 
-const port = process.env.PORT || Math.floor(Math.random() * (2890 - 2280 + 1)) + 2280;
+const http = require('http');
 
-module.exports = { getIpAddress, getSys, saveDirectory, host, port };
+const httpServer = http.createServer((request, response) => {
+	return handler(request, response, {
+		public: saveDirectory,
+		rewrites: [{ source: '**', destination: '/index.html' }],
+	});
+});
+
+module.exports = { getIpAddress, getSys, saveDirectory, httpServer };
