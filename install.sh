@@ -10,23 +10,23 @@ install_dependencies() {
   case $1 in
     debian|ubuntu)
       sudo apt-get update
-      sudo apt-get install -y curl aria2
+      sudo apt-get install -y aria2
       ;;
     fedora)
       sudo dnf update
-      sudo dnf install -y curl aria2
+      sudo dnf install -y aria2
       ;;
     centos|rhel)
       sudo yum update
-      sudo yum install -y curl aria2
+      sudo yum install -y aria2
       ;;
     opensuse)
       sudo zypper update
-      sudo zypper install -y curl aria2
+      sudo zypper install -y aria2
       ;;
     arch)
       sudo pacman -Syu
-      sudo pacman -S --noconfirm curl aria2
+      sudo pacman -S --noconfirm aria2
       ;;
     *)
       echo "Unsupported distribution. Exiting."
