@@ -2,23 +2,15 @@
 
 'use strict';
 
-require('dotenv').config();
-
 const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = require('./modules/aria2.js');
 
 const { deleteFileIfExists, getFiles, str2hex, hex2str, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs } = require('./modules/utils.js');
 
-const { getIpAddress, getSys, saveDirectory, httpServer } = require('./modules/os.js');
+const { getIpAddress, getSys, httpServer } = require('./modules/os.js');
+
+const { saveDirectory, bot, port, version } = require('./modules/vars.js');
 
 const { spawn } = require('child_process');
-
-const { Telegraf } = require('telegraf');
-
-const { version } = require('./package.json');
-
-const bot = new Telegraf(process.env.TELEGRAMBOT);
-
-const port = process.env.PORT || Math.floor(Math.random() * (2890 - 2280 + 1)) + 2280;
 
 bot.on('message', async (ctx) => {
 	try {

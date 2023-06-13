@@ -2,6 +2,8 @@ const os = require('os');
 
 const ifaces = os.networkInterfaces();
 
+const { saveDirectory } = require('./vars.js');
+
 async function getIpAddress() {
 	let ipAddress = 'localhost';
 
@@ -41,7 +43,6 @@ async function getSys() {
 	};
 }
 
-const saveDirectory = process.cwd() + '/downloads/';
 
 const handler = require('serve-handler');
 
@@ -54,4 +55,4 @@ const httpServer = http.createServer((request, response) => {
 	});
 });
 
-module.exports = { getIpAddress, getSys, saveDirectory, httpServer };
+module.exports = { getIpAddress, getSys, httpServer };

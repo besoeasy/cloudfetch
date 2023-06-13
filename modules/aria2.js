@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const { saveDirectory } = require('./os.js');
+const { saveDirectory } = require('./vars.js');
 
 const getVersion = async () => {
 	const { data } = await axios.post('http://localhost:6800/jsonrpc', {
