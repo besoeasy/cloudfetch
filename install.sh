@@ -53,23 +53,18 @@ if ! command_exists node; then
     # Node.js not found, so install it
     echo "Node.js not found, installing..."
 
-    # Install Node.js using the official package manager
+    # Install Node.js using the Linux package manager
     case $distro in
       debian|ubuntu)
-        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         sudo apt-get install -y nodejs
         ;;
       fedora)
-        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         sudo dnf install -y nodejs
         ;;
       centos|rhel)
-        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         sudo yum install -y nodejs
         ;;
       opensuse)
-        sudo rpm --import https://github.com/nodesource/distributions/raw/master/RPM-GPG-KEY.nodesource
-        sudo zypper addrepo --gpgcheck --refresh https://rpm.nodesource.com/pub_18.x/sles/15/nodesource.repo
         sudo zypper install -y nodejs
         ;;
       arch)
