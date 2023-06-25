@@ -1,26 +1,32 @@
 #!/usr/bin/env node
 
-'use strict';
-
 const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = require('./modules/aria2.js');
+
 const { deleteFileIfExists, getFiles, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs, getFileMd5 } = require('./modules/utils.js');
+
 const { getIpAddress, getSys, httpServer } = require('./modules/os.js');
+
 const { saveDirectory, bot, port, version } = require('./modules/vars.js');
+
 const { spawn } = require('child_process');
 
 bot.on('message', async (ctx) => {
 	try {
 		const { message_id, from, chat, date, text } = ctx.message;
 
-		console.clear();
+		const [command, ...args] = text.split(' ');
+
+		const lowerCaseCommand = command.toLowerCase().trim();
+
+		const trimmedArgs = args.map((arg) => arg.trim());
+
+		if (Math.random() < 0.5) {
+			console.clear();
+		}
+
 		console.log(`@${from.username || 'X'} - ${chat.id} - ${text}`);
 
 		if (text.startsWith('/')) {
-			const [command, ...args] = text.split(' ');
-
-			const lowerCaseCommand = command.toLowerCase().trim();
-			const trimmedArgs = args.map((arg) => arg.trim());
-
 			let commandRecognized = true;
 
 			if (lowerCaseCommand === '/start') {
@@ -67,7 +73,9 @@ bot.on('message', async (ctx) => {
 					const { result: ddta } = await downloadAria(chat.id, url);
 					const downloadId = ddta.result;
 
-					ctx.reply(`Download started with id: ${downloadId} \n\n/status_${downloadId}\n\n/cancel_${downloadId}`);
+					ctx.reply(
+						`Download started with id: ${downloadId} \n\n/status_${downloadId}\n\n/cancel_${downloadId}`
+					);
 				}
 			} else if (lowerCaseCommand.startsWith('/status_')) {
 				const downloadId = lowerCaseCommand.split('_')[1];
@@ -78,7 +86,9 @@ bot.on('message', async (ctx) => {
 
 				const downloadSize_t = (ddta.result.totalLength / 1024 / 1024 || 0).toFixed(2);
 
-				ctx.reply(`Download status: ${ddta.result.status} \n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`);
+				ctx.reply(
+					`Download status: ${ddta.result.status} \n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`
+				);
 			} else if (lowerCaseCommand.startsWith('/cancel_')) {
 				const downloadId = lowerCaseCommand.split('_')[1];
 
