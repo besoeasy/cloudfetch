@@ -65,7 +65,7 @@ bot.on('message', async (ctx) => {
 				if (args.length > 0) {
 					const [url] = args;
 
-					var ddta = await downloadAria(chat.id, url);
+					var ddta = await downloadAria(chat.id, url.trim());
 					var downloadId = ddta.result;
 
 					ctx.reply(`Download started with id: ${downloadId} \n\n/status_${downloadId}\n\n/cancel_${downloadId}`);
