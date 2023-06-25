@@ -4,9 +4,11 @@
 
 A versatile Telegram bot: download files from URLs, monitor progress, cancel downloads, access server stats, explore and delete files, and generate direct content URLs.
 
-## Auto Install - Linux Only
+Self hosted replacement for put.io, seedr, torrentdownload, peerflix and others.
 
-Run the following command to swiftly install the Cloud Download Manager on your Linux system:
+## Auto Install - Linux, Raspberry Pi, Other Linux Based SBC
+
+Run the following command to install the Cloud Download Manager :
 
 ```
 sudo bash -c "$(curl -sL https://unpkg.com/cloudfetch)"
