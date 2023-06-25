@@ -8,7 +8,7 @@ Self hosted replacement for put.io, seedr, torrentdownload, peerflix and others.
 
 ## Auto Install - Linux, Raspberry Pi, Other Linux Based SBC
 
-Run the following command to install the Cloud Download Manager :
+Run the following command to install the Cloud Fetch :
 
 ```
 sudo bash -c "$(curl -sL https://unpkg.com/cloudfetch)"
@@ -16,7 +16,7 @@ sudo bash -c "$(curl -sL https://unpkg.com/cloudfetch)"
 
 ## Manual Install - Linux, Windows, MAC
 
-Install the Cloud Download Manager package globally with [NPMJS][]:
+Install the Cloud Fetch package globally with [NPMJS][]:
 
 ```
 npm install -g cloudfetch
@@ -24,7 +24,7 @@ npm install -g cloudfetch
 
 ## Launch the Bot
 
-To start the Cloud Download Manager bot, simply run:
+To start the Cloud Fetch bot, simply run:
 
 ```
 cloudfetch
