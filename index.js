@@ -3,40 +3,39 @@
 'use strict';
 
 const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = require('./modules/aria2.js');
-
 const { deleteFileIfExists, getFiles, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs, getFileMd5 } = require('./modules/utils.js');
-
 const { getIpAddress, getSys, httpServer } = require('./modules/os.js');
-
 const { saveDirectory, bot, port, version } = require('./modules/vars.js');
-
 const { spawn } = require('child_process');
 
 bot.on('message', async (ctx) => {
 	try {
 		const { message_id, from, chat, date, text } = ctx.message;
 
-		console.log('@' + (from.username || 'X') + ' - ' + chat.id + ' - ' + text);
+		console.clear();
+		console.log(`@${from.username || 'X'} - ${chat.id} - ${text}`);
 
 		if (text.startsWith('/')) {
 			const [command, ...args] = text.split(' ');
 
+			const lowerCaseCommand = command.toLowerCase().trim();
+			const trimmedArgs = args.map((arg) => arg.trim());
+
 			let commandRecognized = true;
 
-			if (command === '/start') {
+			if (lowerCaseCommand === '/start') {
 				ctx.reply(`Your user id is: ${chat.id}, Ver : ${version}`);
-			} else if (command === '/help') {
+			} else if (lowerCaseCommand === '/help') {
 				ctx.reply(`https://github.com/besoeasy/cloudfetch`);
-			} else if (command === '/content') {
-				var ipAddress = await getIpAddress();
+			} else if (lowerCaseCommand === '/content') {
+				const ipAddress = await getIpAddress();
 
 				ctx.reply(`HTTP : http://${ipAddress}:${port}`);
-			} else if (command === '/stats') {
-				const ddta = await getGlobalStats();
-				const stats = ddta.result;
+			} else if (lowerCaseCommand === '/stats') {
+				const { result: stats } = await getGlobalStats();
 				const sys = await getSys();
 
-				const msgtosend =
+				const msgToSend =
 					`Server Memory: ${bytesToSize(sys.totalMemory)}\n` +
 					`Free Memory: ${bytesToSize(sys.freeMemory)}\n` +
 					`Server Memory Used: ${sys.usedMemoryPercentage}%\n` +
@@ -46,61 +45,61 @@ bot.on('message', async (ctx) => {
 					`Waiting downloads: ${stats.numWaiting}\n` +
 					`Stopped downloads: ${stats.numStopped}`;
 
-				ctx.reply(msgtosend);
-			} else if (command === '/files') {
-				var files = await getFiles(saveDirectory + chat.id);
+				ctx.reply(msgToSend);
+			} else if (lowerCaseCommand === '/files') {
+				const files = await getFiles(saveDirectory + chat.id);
 
 				if (files.length < 1) {
 					ctx.reply(`No files found !`);
 				}
 
 				for (const file of files) {
-					var sendFile = file.substring(1);
+					const sendFile = file.substring(1);
 
-					var md5h = await getFileMd5(saveDirectory + chat.id + '/' + sendFile);
+					const md5h = await getFileMd5(saveDirectory + chat.id + '/' + sendFile);
 
 					ctx.reply(`${sendFile}\n\n/delete_${md5h}`);
 				}
-			} else if (command === '/download') {
-				if (args.length > 0) {
-					const [url] = args;
+			} else if (lowerCaseCommand === '/download') {
+				if (trimmedArgs.length > 0) {
+					const [url] = trimmedArgs;
 
-					var ddta = await downloadAria(chat.id, url.trim());
-					var downloadId = ddta.result;
+					const { result: ddta } = await downloadAria(chat.id, url);
+					const downloadId = ddta.result;
 
 					ctx.reply(`Download started with id: ${downloadId} \n\n/status_${downloadId}\n\n/cancel_${downloadId}`);
 				}
-			} else if (command.startsWith('/status_')) {
-				var downloadId = command.split('_')[1];
+			} else if (lowerCaseCommand.startsWith('/status_')) {
+				const downloadId = lowerCaseCommand.split('_')[1];
 
-				var ddta = await getDownloadStatus(downloadId);
+				const { result: ddta } = await getDownloadStatus(downloadId);
 
-				var downloadSize_c = (ddta.result.completedLength / 1024 / 1024 || 0).toFixed(2);
+				const downloadSize_c = (ddta.result.completedLength / 1024 / 1024 || 0).toFixed(2);
 
-				var downloadSize_t = (ddta.result.totalLength / 1024 / 1024 || 0).toFixed(2);
+				const downloadSize_t = (ddta.result.totalLength / 1024 / 1024 || 0).toFixed(2);
 
 				ctx.reply(`Download status: ${ddta.result.status} \n\nDownload size: ${downloadSize_c} MB / ${downloadSize_t} MB`);
-			} else if (command.startsWith('/cancel_')) {
-				var downloadId = command.split('_')[1];
+			} else if (lowerCaseCommand.startsWith('/cancel_')) {
+				const downloadId = lowerCaseCommand.split('_')[1];
 
-				var ddta = await cancelDownload(downloadId);
+				const { result: ddta } = await cancelDownload(downloadId);
 
 				ctx.reply(`Download canceled with id: ${downloadId}`);
-			} else if (command.startsWith('/delete_')) {
+			} else if (lowerCaseCommand.startsWith('/delete_')) {
 				ctx.reply(`Deleting file...`);
 
-				var hash = command.split('_')[1];
+				const hash = lowerCaseCommand.split('_')[1];
 
-				var files = await getFiles(saveDirectory + chat.id);
+				const files = await getFiles(saveDirectory + chat.id);
 
 				if (files.length < 1) {
 					ctx.reply(`No files found !`);
 				}
 
 				for (const file of files) {
-					var sendFile = file.substring(1);
+					const sendFile = file.substring(1);
 
-					var md5h = await getFileMd5(saveDirectory + chat.id + '/' + sendFile);
+					const md5h = await getFileMd5(saveDirectory + chat.id + '/' + sendFile);
 
 					if (md5h === hash) {
 						deleteFileIfExists(saveDirectory + chat.id + '/' + sendFile);
@@ -112,7 +111,7 @@ bot.on('message', async (ctx) => {
 			}
 
 			if (!commandRecognized) {
-				const suggestions = suggestRelatedCommands(command);
+				const suggestions = suggestRelatedCommands(lowerCaseCommand);
 				if (suggestions.length > 0) {
 					ctx.reply(`Command not found.\n\nDid you mean: ${suggestions} ?`);
 				} else {
