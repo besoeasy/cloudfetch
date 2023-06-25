@@ -4,7 +4,7 @@
 
 const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = require('./modules/aria2.js');
 
-const { deleteFileIfExists, getFiles, str2hex, hex2str, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs } = require('./modules/utils.js');
+const { deleteFileIfExists, getFiles, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs, getFileMd5 } = require('./modules/utils.js');
 
 const { getIpAddress, getSys, httpServer } = require('./modules/os.js');
 
@@ -56,9 +56,10 @@ bot.on('message', async (ctx) => {
 
 				for (const file of files) {
 					var sendFile = file.substring(1);
-					var hash = str2hex(sendFile);
 
-					ctx.reply(`${sendFile} \n\n/delete_${hash}\n\n/fetch_${hash}`);
+					var md5h = await getFileMd5(saveDirectory + chat.id + '/' + sendFile);
+
+					ctx.reply(`${sendFile}\n\n/delete_${md5h}`);
 				}
 			} else if (command === '/download') {
 				if (args.length > 0) {
@@ -85,26 +86,27 @@ bot.on('message', async (ctx) => {
 				var ddta = await cancelDownload(downloadId);
 
 				ctx.reply(`Download canceled with id: ${downloadId}`);
-			} else if (command.startsWith('/fetch_')) {
-				var hash = command.split('_')[1];
-
-				var file = hex2str(hash);
-
-				var file_path = saveDirectory + chat.id + '/' + file;
-
-				ctx.reply(`Fetching ${file} ...`);
-
-				if (fs.existsSync(file_path)) {
-					ctx.replyWithDocument({ source: file_path });
-				}
 			} else if (command.startsWith('/delete_')) {
+				ctx.reply(`Deleting file...`);
+
 				var hash = command.split('_')[1];
 
-				var file = hex2str(hash);
+				var files = await getFiles(saveDirectory + chat.id);
 
-				await deleteFileIfExists(saveDirectory + chat.id + '/' + file);
+				if (files.length < 1) {
+					ctx.reply(`No files found !`);
+				}
 
-				ctx.reply(`${file} deleted !`);
+				for (const file of files) {
+					var sendFile = file.substring(1);
+
+					var md5h = await getFileMd5(saveDirectory + chat.id + '/' + sendFile);
+
+					if (md5h === hash) {
+						deleteFileIfExists(saveDirectory + chat.id + '/' + sendFile);
+						ctx.reply(`File deleted: ${sendFile}`);
+					}
+				}
 			} else {
 				commandRecognized = false;
 			}

@@ -2,6 +2,28 @@ const fs = require('fs');
 
 const path = require('path');
 
+const crypto = require('crypto');
+
+function getFileMd5(filePath) {
+	return new Promise((resolve, reject) => {
+		const hash = crypto.createHash('md5');
+		const stream = fs.createReadStream(filePath);
+
+		stream.on('data', (data) => {
+			hash.update(data);
+		});
+
+		stream.on('end', () => {
+			const md5Hash = hash.digest('hex');
+			resolve(md5Hash);
+		});
+
+		stream.on('error', (error) => {
+			reject(error);
+		});
+	});
+}
+
 replaceStringInArray = (array, stringToFind, stringToReplace) => {
 	const newArray = array.map((item) => {
 		if (item.includes(stringToFind)) {
@@ -41,23 +63,6 @@ function deleteFileIfExists(filePath) {
 
 		console.log(`File ${filePath} has been deleted`);
 	});
-}
-
-function str2hex(str) {
-	var arr = [];
-	for (var i = 0, l = str.length; i < l; i++) {
-		var hex = Number(str.charCodeAt(i)).toString(16);
-		arr.push(hex);
-	}
-	return arr.join('');
-}
-
-function hex2str(hex) {
-	var str = '';
-	for (var i = 0; i < hex.length; i += 2) {
-		str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-	}
-	return str;
 }
 
 function bytesToSize(bytes) {
@@ -121,4 +126,4 @@ function levenshteinDistance(a, b) {
 	return matrix[b.length][a.length];
 }
 
-module.exports = { suggestRelatedCommands, levenshteinDistance, bytesToSize, str2hex, hex2str, getFiles, deleteFileIfExists, deleteEmptyFolders, fs };
+module.exports = { suggestRelatedCommands, levenshteinDistance, bytesToSize, getFiles, deleteFileIfExists, deleteEmptyFolders, fs, getFileMd5 };
