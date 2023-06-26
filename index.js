@@ -4,7 +4,7 @@ const { getGlobalStats, downloadAria, getDownloadStatus, cancelDownload } = requ
 
 const { deleteFileIfExists, getFiles, bytesToSize, deleteEmptyFolders, suggestRelatedCommands, fs, getFileMd5 } = require('./modules/utils.js');
 
-const { getIpAddress, getSys, httpServer } = require('./modules/os.js');
+const { getIpAddress, getSys, getUptime, httpServer } = require('./modules/os.js');
 
 const { saveDirectory, bot, port, version } = require('./modules/vars.js');
 
@@ -39,14 +39,21 @@ bot.on('message', async (ctx) => {
 				ctx.reply(`HTTP : http://${ipAddress}:${port}`);
 			} else if (lowerCaseCommand === '/stats') {
 				const { result: stats } = await getGlobalStats();
-				const sys = await getSys();
+
+				const { totalMemory, freeMemory, usedMemoryPercentage } = await getSys();
+
+				const { uptimeHours, uptimeMinutes } = await getUptime();
 
 				const msgToSend =
-					`Server Memory: ${bytesToSize(sys.totalMemory)}\n` +
-					`Free Memory: ${bytesToSize(sys.freeMemory)}\n` +
-					`Server Memory Used: ${sys.usedMemoryPercentage}%\n` +
+					`Server Uptime: ${uptimeHours} hours and ${uptimeMinutes} minutes\n` +
+					`\n\n` +
+					`Server Memory: ${bytesToSize(totalMemory)}\n` +
+					`Free Memory: ${bytesToSize(freeMemory)}\n` +
+					`Server Memory Used: ${usedMemoryPercentage}%\n` +
+					`\n\n` +
 					`Download speed: ${bytesToSize(stats.downloadSpeed)}\n` +
 					`Upload speed: ${bytesToSize(stats.uploadSpeed)}\n` +
+					`\n\n` +
 					`Active downloads: ${stats.numActive}\n` +
 					`Waiting downloads: ${stats.numWaiting}\n` +
 					`Stopped downloads: ${stats.numStopped}`;
@@ -66,7 +73,7 @@ bot.on('message', async (ctx) => {
 
 					ctx.reply(`${sendFile}\n\n/delete_${md5h}`);
 				}
-			} else if (lowerCaseCommand === '/download') {
+			} else if (lowerCaseCommand === '/download' || lowerCaseCommand === '/dl') {
 				if (trimmedArgs.length > 0) {
 					const [url] = trimmedArgs;
 
@@ -147,7 +154,7 @@ try {
 			'--rpc-allow-origin-all',
 			'--rpc-listen-port=6800',
 			'--enable-dht=true',
-			'--dht-listen-port=6881-6999',
+			'--dht-listen-port=6881-7999',
 			'--dht-entry-point=router.bittorrent.com:6881',
 			'--dht-entry-point6=router.bittorrent.com:6881',
 			'--dht-entry-point6=router.utorrent.com:6881',

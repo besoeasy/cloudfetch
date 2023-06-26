@@ -43,6 +43,17 @@ async function getSys() {
 	};
 }
 
+async function getUptime() {
+	const uptime = os.uptime();
+	const uptimeHours = Math.floor(uptime / 3600);
+	const uptimeMinutes = Math.floor((uptime % 3600) / 60);
+
+	return {
+		uptime: uptime,
+		uptimeHours: uptimeHours,
+		uptimeMinutes: uptimeMinutes,
+	};
+}
 
 const handler = require('serve-handler');
 
@@ -55,4 +66,4 @@ const httpServer = http.createServer((request, response) => {
 	});
 });
 
-module.exports = { getIpAddress, getSys, httpServer };
+module.exports = { getIpAddress, getSys, getUptime, httpServer };
