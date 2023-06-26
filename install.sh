@@ -102,12 +102,6 @@ source ~/.bashrc
 
 echo "Telegram bot token Set !"
 
-# Set CLOUDFETCHDIR as an environment variable
-echo "export CLOUDFETCHDIR=/tmp/cloudfetch" >> ~/.bashrc && source ~/.bashrc
-source ~/.bashrc
-
-echo "CLOUDFETCHDIR set to /tmp/cloudfetch!"
-
 # Create a systemd service file to run cloudfetch on boot
 cat > cloudfetch.service << EOL
 [Unit]
