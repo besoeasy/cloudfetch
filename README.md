@@ -29,3 +29,13 @@ To start the Cloud Fetch bot, simply run:
 ```
 cloudfetch
 ```
+
+
+
+## Recommended Install JellyFin
+
+Run the following command to install JellyFin to play your media on TV, Android, IOS :
+
+```
+curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
+```
