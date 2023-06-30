@@ -34,6 +34,6 @@ Run the following command to install JellyFin
 curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
 ```
 
-Set Custom Folder while setup, set same folder in cloudfetch
+get savedir from cloudfetch bot, using command /savedir and set it on JellyFin
 
 ![image](https://github.com/besoeasy/cloudfetch/assets/8281782/60d91276-095f-45ec-b07b-a7c3a69f5f76)
