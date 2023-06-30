@@ -22,17 +22,11 @@ Install the Cloud Fetch package globally with [NPMJS][]:
 npm install -g cloudfetch
 ```
 
-## Launch the Bot
 
-To start the Cloud Fetch bot, simply run:
+## Recommended : Install JellyFin
 
-```
-cloudfetch
-```
+Jellyfin is a free and open-source media server software that allows users to organize, stream, and access their personal media library. It provides a platform for managing and streaming various types of media content, including movies, TV shows, music, and photos.
 
-
-
-## Recommended Install JellyFin
 
 Run the following command to install JellyFin
 
@@ -40,7 +34,6 @@ Run the following command to install JellyFin
 curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
 ```
 
-Set Custom Folder while setup
+Set Custom Folder while setup, set same folder in cloudfetch
 
 ![image](https://github.com/besoeasy/cloudfetch/assets/8281782/60d91276-095f-45ec-b07b-a7c3a69f5f76)
-
