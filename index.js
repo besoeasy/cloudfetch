@@ -33,6 +33,8 @@ bot.on('message', async (ctx) => {
 				ctx.reply(`Your user id is: ${chat.id}, Ver : ${version}`);
 			} else if (lowerCaseCommand === '/savedir') {
 				ctx.reply(`Save Directory: ${saveDirectory}`);
+
+				ctx.reply(`${saveDirectory}`);
 			} else if (lowerCaseCommand === '/help') {
 				ctx.reply(`https://github.com/besoeasy/cloudfetch`);
 			} else if (lowerCaseCommand === '/content') {
