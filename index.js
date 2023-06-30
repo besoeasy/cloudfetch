@@ -32,7 +32,7 @@ bot.on('message', async (ctx) => {
 			if (lowerCaseCommand === '/start') {
 				ctx.reply(`Your user id is: ${chat.id}, Ver : ${version}`);
 			} else if (lowerCaseCommand === '/savedir') {
-				ctx.reply(`Save Directory: ${saveDirectory}`);
+				ctx.reply(`Save Directory : `);
 
 				ctx.reply(`${saveDirectory}`);
 			} else if (lowerCaseCommand === '/help') {
