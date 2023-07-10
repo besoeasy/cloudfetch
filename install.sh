@@ -10,23 +10,23 @@ install_dependencies() {
   case $1 in
     debian|ubuntu)
       sudo apt-get update
-      sudo apt-get install -y aria2
+      sudo apt-get install -y aria2 nodejs npm
       ;;
     fedora)
       sudo dnf update
-      sudo dnf install -y aria2
+      sudo dnf install -y aria2 nodejs npm
       ;;
     centos|rhel)
       sudo yum update
-      sudo yum install -y aria2
+      sudo yum install -y aria2 nodejs npm
       ;;
     opensuse)
       sudo zypper update
-      sudo zypper install -y aria2
+      sudo zypper install -y aria2 nodejs npm
       ;;
     arch)
       sudo pacman -Syu
-      sudo pacman -S --noconfirm aria2
+      sudo pacman -S --noconfirm aria2 nodejs npm
       ;;
     *)
       echo "Unsupported distribution. Exiting."
@@ -45,43 +45,17 @@ else
 fi
 
 # Install dependencies
-install_dependencies $distro
+install_dependencies "$distro"
 
-# Check if Node.js is already installed
-if ! command_exists node; then
-
-    # Node.js not found, so install it
-    echo "Node.js not found, installing..."
-
-    # Install Node.js using the Linux package manager
-    case $distro in
-      debian|ubuntu)
-        sudo apt-get install -y nodejs npm
-        ;;
-      fedora)
-        sudo dnf install -y nodejs npm
-        ;;
-      centos|rhel)
-        sudo yum install -y nodejs npm
-        ;;
-      opensuse)
-        sudo zypper install -y nodejs npm
-        ;;
-      arch)
-        sudo pacman -S --noconfirm nodejs npm
-        ;;
-      *)
-        echo "Unsupported distribution. Exiting."
-        exit 1
-        ;;
-    esac
+# Check if cloudfetch is already installed
+if ! command_exists cloudfetch; then
+  # Cloudfetch not found, so install it
+  echo "Cloudfetch not found, installing..."
+  sudo npm install -g cloudfetch
 else
-    # Node.js already installed, print message
-    echo "Node.js already installed."
+  # Cloudfetch already installed, print message
+  echo "Cloudfetch already installed."
 fi
-
-# Install cloudfetch using npm
-sudo npm install -g cloudfetch
 
 # Confirm successful installation
 echo "Installation complete."
@@ -98,9 +72,8 @@ done
 
 # Set TELEGRAMBOT as an environment variable
 echo "export TELEGRAMBOT=$TELEGRAMBOT" >> ~/.bashrc && source ~/.bashrc
-source ~/.bashrc
 
-echo "Telegram bot token Set !"
+echo "Telegram bot token set!"
 
 # Create a systemd service file to run cloudfetch on boot
 cat > cloudfetch.service << EOL
@@ -118,7 +91,7 @@ User=${USER}
 WantedBy=multi-user.target
 EOL
 
-# Move the service file to systemd system directory
+# Move the service file to the systemd system directory
 sudo mv cloudfetch.service /etc/systemd/system/
 
 # Reload systemd daemon and enable cloudfetch service
@@ -129,5 +102,5 @@ sudo systemctl enable cloudfetch.service
 sudo systemctl start cloudfetch.service
 
 # Confirm that the cloudfetch service is running
-echo "Checking the status of cloudfetch service:"
+echo "Checking the status of the cloudfetch service:"
 sudo systemctl status cloudfetch.service
