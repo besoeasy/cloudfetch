@@ -56,16 +56,16 @@ if ! command_exists node; then
     # Install Node.js using the Linux package manager
     case $distro in
       debian|ubuntu)
-        sudo apt-get install -y nodejs
+        sudo apt-get install -y nodejs npm
         ;;
       fedora)
-        sudo dnf install -y nodejs
+        sudo dnf install -y nodejs npm
         ;;
       centos|rhel)
-        sudo yum install -y nodejs
+        sudo yum install -y nodejs npm
         ;;
       opensuse)
-        sudo zypper install -y nodejs
+        sudo zypper install -y nodejs npm
         ;;
       arch)
         sudo pacman -S --noconfirm nodejs npm
