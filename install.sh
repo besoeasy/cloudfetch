@@ -1,64 +1,11 @@
 #!/bin/bash
 
-# Function to check if command exists
-command_exists() {
-  command -v "$@" > /dev/null 2>&1
-}
+# Update
+sudo apt-get update
 
-# Function to install dependencies for different distros
-install_dependencies() {
-  case $1 in
-    debian|ubuntu)
-      sudo apt-get update
-      sudo apt-get install -y aria2 nodejs npm
-      ;;
-    fedora)
-      sudo dnf update
-      sudo dnf install -y aria2 nodejs npm
-      ;;
-    centos|rhel)
-      sudo yum update
-      sudo yum install -y aria2 nodejs npm
-      ;;
-    opensuse)
-      sudo zypper update
-      sudo zypper install -y aria2 nodejs npm
-      ;;
-    arch)
-      sudo pacman -Syu
-      sudo pacman -S --noconfirm aria2 nodejs npm
-      ;;
-    *)
-      echo "Unsupported distribution. Exiting."
-      exit 1
-      ;;
-  esac
-}
-
-# Detect distribution
-if [ -f /etc/os-release ]; then
-  . /etc/os-release
-  distro=$ID
-else
-  echo "Unable to detect distribution. Exiting."
-  exit 1
-fi
-
-# Install dependencies
-install_dependencies "$distro"
-
-# Check if cloudfetch is already installed
-if ! command_exists cloudfetch; then
-  # Cloudfetch not found, so install it
-  echo "Cloudfetch not found, installing..."
-  sudo npm install -g cloudfetch
-else
-  # Cloudfetch already installed, print message
-  echo "Cloudfetch already installed."
-fi
-
-# Confirm successful installation
-echo "Installation complete."
+# Install Node.js 18.x, npm, aria2
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs aria2
 
 # Prompt user for TELEGRAMBOT variable with regex check
 while true; do
@@ -71,36 +18,31 @@ while true; do
 done
 
 # Set TELEGRAMBOT as an environment variable
-echo "export TELEGRAMBOT=$TELEGRAMBOT" >> ~/.bashrc && source ~/.bashrc
+echo "export TELEGRAMBOT=$TELEGRAMBOT" >> ~/.bashrc
 
-echo "Telegram bot token set!"
+# Reload the shell environment
+source ~/.bashrc
 
-# Create a systemd service file to run cloudfetch on boot
-cat > cloudfetch.service << EOL
+# Install cloudfetch globally
+sudo npm install -g cloudfetch
+
+# Create cloudfetch systemd service
+sudo tee /etc/systemd/system/cloudfetch.service <<EOF
 [Unit]
-Description=Cloud Download Manager
+Description=Cloudfetch Service
 After=network.target
 
 [Service]
-Environment=TELEGRAMBOT=${TELEGRAMBOT}
 ExecStart=/usr/bin/env cloudfetch
 Restart=always
-User=${USER}
+Environment="TELEGRAMBOT=$TELEGRAMBOT"
 
 [Install]
 WantedBy=multi-user.target
-EOL
-
-# Move the service file to the systemd system directory
-sudo mv cloudfetch.service /etc/systemd/system/
+EOF
 
 # Reload systemd daemon and enable cloudfetch service
 sudo systemctl daemon-reload
 sudo systemctl enable cloudfetch.service
 
-# Start the cloudfetch service
-sudo systemctl start cloudfetch.service
-
-# Confirm that the cloudfetch service is running
-echo "Checking the status of the cloudfetch service:"
-sudo systemctl status cloudfetch.service
+echo "Cloudfetch installation and service setup complete!"
